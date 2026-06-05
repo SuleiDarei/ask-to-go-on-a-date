@@ -156,8 +156,123 @@ yesBtn.addEventListener("click", () => {
   noBtn.style.display = "none";
   yesBtn.textContent = "See you there 🥰";
   yesBtn.style.transform = "scale(1.2)";
+  document.getElementById("evidence").hidden = false;
   rainHearts();
 });
+
+// ---- Downloadable "evidence" certificate ----
+document.getElementById("downloadBtn").addEventListener("click", drawEvidence);
+
+function drawEvidence() {
+  const W = 1080, H = 1080;
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d");
+
+  // Soft pink gradient background.
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, "#ffd6e8");
+  grad.addColorStop(0.5, "#ffafcc");
+  grad.addColorStop(1, "#ff8fab");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Scattered hearts.
+  ctx.globalAlpha = 0.35;
+  const heartChars = ["💖", "💕", "🌸", "🧸"];
+  for (let i = 0; i < 22; i++) {
+    ctx.font = 30 + Math.random() * 40 + "px serif";
+    ctx.fillText(
+      heartChars[Math.floor(Math.random() * heartChars.length)],
+      Math.random() * W,
+      Math.random() * H
+    );
+  }
+  ctx.globalAlpha = 1;
+
+  // White rounded card.
+  const m = 90;
+  roundRect(ctx, m, m, W - m * 2, H - m * 2, 40);
+  ctx.fillStyle = "rgba(255,255,255,0.92)";
+  ctx.fill();
+
+  ctx.textAlign = "center";
+
+  ctx.font = "44px serif";
+  ctx.fillText("💌  OFFICIAL EVIDENCE  💌", W / 2, 250);
+
+  ctx.fillStyle = "#c9184a";
+  ctx.font = "bold 86px 'Segoe UI', sans-serif";
+  ctx.fillText("She said YES! 💖", W / 2, 380);
+
+  ctx.fillStyle = "#6a1b3d";
+  ctx.font = "bold 40px 'Segoe UI', sans-serif";
+  wrapText(ctx, "to: Do you wanna help plan for our first date?", W / 2, 480, W - 280, 52);
+
+  // The chosen idea (if any).
+  ctx.fillStyle = "#8a2748";
+  ctx.font = "italic 38px 'Segoe UI', sans-serif";
+  const ideaLine = pickedIdea
+    ? "Date of choice: " + pickedIdea.label.replace(/[^\p{L}\p{N} &]/gu, "").trim()
+    : "Date plans: officially in the works 💞";
+  wrapText(ctx, ideaLine, W / 2, 640, W - 280, 50);
+
+  // Date stamp.
+  ctx.fillStyle = "#c9184a";
+  ctx.font = "bold 34px 'Segoe UI', sans-serif";
+  const today = new Date().toLocaleDateString(undefined, {
+    year: "numeric", month: "long", day: "numeric"
+  });
+  ctx.fillText("Signed & sealed on " + today, W / 2, 770);
+
+  // Cute seal.
+  ctx.font = "120px serif";
+  ctx.fillText("🧸💕", W / 2, 900);
+
+  ctx.fillStyle = "#8a2748";
+  ctx.font = "600 30px 'Segoe UI', sans-serif";
+  ctx.fillText("Made with ❤️ by Sulaiman", W / 2, 980);
+
+  // Trigger download.
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "i-said-yes-evidence.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }, "image/png");
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "";
+  const lines = [];
+  for (const word of words) {
+    const test = line + word + " ";
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line.trim());
+      line = word + " ";
+    } else {
+      line = test;
+    }
+  }
+  lines.push(line.trim());
+  lines.forEach((l, i) => ctx.fillText(l, x, y + i * lineHeight));
+}
 
 function rainHearts() {
   const hearts = ["💖", "💕", "💗", "❤️", "🧸", "🌸"];
