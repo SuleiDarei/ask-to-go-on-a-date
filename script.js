@@ -40,17 +40,19 @@ let noCount = 0;
 let pickedIdea = null;
 
 // ---- Romantic date ideas header ----
+// Each idea maps to a matching bear GIF. Ideas without a good match fall back
+// to a loving hug (handled in the click below). All hand-checked: cuddles, no kissing.
 const dateIdeas = [
-  { label: "Sunset picnic 🧺", text: "A sunset picnic it is — I'll pack your favourite snacks 🧺💕" },
-  { label: "Stargazing ✨", text: "Stargazing under the night sky... how dreamy ✨🌙" },
-  { label: "Movie night 🎬", text: "Cozy movie night — you pick, I bring the popcorn 🎬🍿" },
-  { label: "Coffee date ☕", text: "Coffee date! Long talks and warm cups ☕💗" },
-  { label: "Beach walk 🌊", text: "A beach walk with our feet in the sand 🌊👣" },
-  { label: "Cook together 🍝", text: "Let's cook together — chaos and laughter guaranteed 🍝😄" },
+  { label: "Sunset picnic 🧺", text: "A sunset picnic it is — I'll pack your favourite snacks 🧺💕", gif: "https://media.tenor.com/KgydjX_HXD0AAAAC/credits-to-milkmochabear-milk-and-mocha.gif" },
+  { label: "Stargazing ✨", text: "Stargazing under the night sky... how dreamy ✨🌙", gif: "https://media.tenor.com/NAlFEAMHqp4AAAAC/love-cute.gif" },
+  { label: "Movie night 🎬", text: "Cozy movie night — you pick, I bring the popcorn 🎬🍿", gif: "https://media.tenor.com/KCGx5y8D11EAAAAC/milk-and-mocha-waching.gif" },
+  { label: "Coffee date ☕", text: "Coffee date! Long talks and warm cups ☕💗", gif: "https://media.tenor.com/OvDaB7346xIAAAAC/milk-mocha.gif" },
+  { label: "Beach walk 🌊", text: "A beach walk with our feet in the sand 🌊👣", gif: "https://media.tenor.com/nyCt3hBxmO4AAAAC/bubu-dudu-beach-party.gif" },
+  { label: "Cook together 🍝", text: "Let's cook together — chaos and laughter guaranteed 🍝😄", gif: "https://media.tenor.com/vQVwRv7U52sAAAAC/dudu-bubu-dudu-cooking.gif" },
   { label: "Art & painting 🎨", text: "An art date — let's make a mess and call it masterpieces 🎨" },
-  { label: "Ice cream 🍦", text: "Ice cream stroll — one scoop for every laugh 🍦💞" },
-  { label: "Bookstore browse 📚", text: "Wandering a cozy bookstore together 📚🤍" },
-  { label: "Dancing 💃", text: "Dancing the night away, just you and me 💃🕺" }
+  { label: "Ice cream 🍦", text: "Ice cream stroll — one scoop for every laugh 🍦💞", gif: "https://media.tenor.com/Bifz_yyzJIUAAAAC/milk-mocha-bear-milk-and-mocha.gif" },
+  { label: "Bookstore browse 📚", text: "Wandering a cozy bookstore together 📚🤍", gif: "https://media.tenor.com/dmbVED27EaAAAAAC/milk-mocha.gif" },
+  { label: "Dancing 💃", text: "Dancing the night away, just you and me 💃🕺", gif: "https://media.tenor.com/G63l14jIfggAAAAC/dance.gif" }
 ];
 
 const ideasChips = document.getElementById("ideasChips");
@@ -64,6 +66,8 @@ dateIdeas.forEach((idea) => {
     chip.classList.add("active");
     pickedIdea = idea;
     pickedIdeaEl.textContent = idea.text;
+    // Show a bear GIF that matches the idea (loving hug if there's no specific one).
+    setGifSrc(idea.gif || happyGif);
   });
   ideasChips.appendChild(chip);
 });
